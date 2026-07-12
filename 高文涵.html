@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高文涵 · AI/UX 设计师</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg:#0a0a0a; --card:#141414; --card2:#1a1a1a;
+    --text:#fff; --sub:#888; --blue:#6b8cff; --border:#242424;
+    --gold-1:#f0d48c; --gold-2:#e0a95c; --gold-3:#f5e3a8;
+  }
+  body {
+    font-family:-apple-system,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:1280px; margin:0 auto; padding:0 40px; }
+  a { color:inherit; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(10,10,10,.7); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border); }
+  .nav-in { max-width:1280px; margin:0 auto; padding:12px 40px;
+    display:flex; align-items:center; justify-content:space-between; }
+
+  .logo {
+    font-family:'Sacramento', cursive;
+    font-size:34px;
+    line-height:1;
+    background:linear-gradient(100deg, var(--gold-2) 0%, var(--gold-3) 35%, var(--gold-1) 60%, var(--gold-2) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    letter-spacing:1px;
+    padding:4px 0;
+    display:inline-block;
+    filter: drop-shadow(0 0 10px rgba(240,212,140,.25));
+    transition: filter .3s, transform .3s;
+    cursor:default;
+    user-select:none;
+  }
+  .logo:hover {
+    filter: drop-shadow(0 0 16px rgba(240,212,140,.4));
+    transform: scale(1.02);
+  }
+
+  .nav-links { display:flex; gap:32px; }
+  .nav-links a { color:var(--sub); text-decoration:none; font-size:14px; transition:.3s; position:relative; }
+  .nav-links a::after { content:""; position:absolute; left:0; bottom:-4px; width:0; height:1px;
+    background:#fff; transition:width .3s ease; }
+  .nav-links a:hover { color:#fff; }
+  .nav-links a:hover::after { width:100%; }
+
+  .hero { padding:150px 0 90px; display:grid;
+    grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+  .eyebrow { font-size:13px; letter-spacing:3px; color:var(--sub);
+    text-transform:uppercase; margin-bottom:18px; }
+  .hero h1 { font-size:100px; font-weight:800; line-height:.95;
+    letter-spacing:-2px; margin-bottom:22px; }
+  .hero h2 { font-size:32px; font-weight:700; margin-bottom:26px; line-height:1.3; }
+  .hero .intro { color:var(--sub); font-size:16px; max-width:480px;
+    margin-bottom:30px; line-height:1.9; }
+  .tags { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:38px; }
+  /* 标签整体缩小至 80% */
+  .tag { padding:8px 16px; border:1px solid var(--border);
+    border-radius:30px; font-size:11px; color:#ccc;
+    transition:transform .25s, border-color .25s, color .25s; }
+  .tag:hover { transform:translateY(-2px); border-color:#3a3a3a; color:#fff; }
+  .btns { display:flex; gap:16px; flex-wrap:wrap; }
+  .btn { padding:16px 30px; border-radius:40px; font-size:15px;
+    text-decoration:none; transition:transform .3s, box-shadow .3s; display:inline-flex;
+    align-items:center; gap:8px; cursor:pointer; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn:active { transform:translateY(0) scale(.98); }
+  .btn svg { transition:transform .3s; }
+  .btn-white { background:#fff; color:#000; font-weight:500; }
+  .btn-outline { border:1px solid #3a4a7a; color:#fff;
+    background:linear-gradient(180deg,#1a2036,#121526); }
+  .btn-outline:hover { box-shadow:0 8px 24px rgba(107,140,255,.18); }
+  .btn-outline svg { width:16px; height:16px; }
+  .btn-outline:hover svg { transform:translateY(2px); }
+  .btn-download { border:1px solid #2f4a3a; color:#bdf5cf; font-weight:500;
+    background:linear-gradient(180deg,#132218,#0e1a12); }
+  .btn-download:hover { box-shadow:0 8px 24px rgba(80,220,150,.15); }
+  .btn-download svg { width:16px; height:16px; }
+  .btn-download:hover svg { transform:translateY(2px); }
+  /* Vibe Coding 按钮 - 紫色渐变 */
+  .btn-vibe { border:1px solid #5a3a7a; color:#e6d3ff; font-weight:500;
+    background:linear-gradient(180deg,#241533,#180e26); }
+  .btn-vibe:hover { box-shadow:0 8px 24px rgba(160,90,255,.22); }
+  .btn-vibe svg { width:16px; height:16px; }
+  .btn-vibe:hover svg { transform:translateX(2px); }
+
+  .photos { position:relative; height:560px; }
+  .photo { position:absolute; border-radius:20px; overflow:hidden;
+    background:#222; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  .photo img { width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform .6s ease; }
+  .p-main { width:340px; height:480px; top:0; left:20px; z-index:2; }
+  .p-main:hover img { transform:scale(1.04); }
+  .photo-card { position:absolute; bottom:20px; left:20px; z-index:4;
+    width:340px; background:rgba(20,20,25,.85); backdrop-filter:blur(10px);
+    border:1px solid var(--border); border-radius:16px; padding:20px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+    transition:transform .35s, border-color .35s; }
+  .photo-card:hover { transform:translateY(-4px); border-color:#3a3a3a; }
+  .photo-card .t1 { font-size:11px; letter-spacing:2px; color:var(--sub);
+    text-transform:uppercase; margin-bottom:6px; }
+  .photo-card .t2 { font-size:20px; font-weight:700; }
+  .photo-card .t3 { font-size:12px; color:var(--sub); margin-top:4px; }
+  .arrow { width:44px; height:44px; border-radius:50%; border:1px solid #3a4a7a;
+    display:flex; align-items:center; justify-content:center; color:var(--blue); flex-shrink:0;
+    transition:transform .35s, background .35s; }
+  .photo-card:hover .arrow { transform:translateX(4px); background:rgba(107,140,255,.12); }
+
+  section { padding:70px 0; }
+  .label { font-size:13px; letter-spacing:3px; color:var(--blue);
+    text-transform:uppercase; font-weight:600; margin-bottom:22px; }
+  .big-title { font-size:60px; font-weight:800; line-height:1.15;
+    letter-spacing:-1px; margin-bottom:46px; }
+
+  .profile-grid { display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:20px; }
+  .p-card { background:var(--card); border:1px solid var(--border);
+    border-radius:20px; padding:30px; display:flex; flex-direction:column;
+    transition:transform .35s, border-color .35s, box-shadow .35s; }
+  .p-card:hover { transform:translateY(-6px); border-color:#3a3a3a;
+    box-shadow:0 16px 40px rgba(0,0,0,.35); }
+  /* 数字卡片：主数字大、单位小 */
+  .p-card .num { font-size:48px; font-weight:800; line-height:1; }
+  .p-card .num .unit { font-size:20px; font-weight:700; color:var(--sub);
+    margin-left:4px; letter-spacing:.5px; }
+  .p-card .desc { font-size:14px; color:var(--sub); margin-top:auto; padding-top:40px; }
+  .p-card.info h3 { font-size:22px; margin-bottom:20px; }
+  .p-card.info .meta { font-size:14px; color:var(--sub); margin-bottom:8px; }
+  /* mini-card 放在 About Me 下方、描述文本上方 */
+  .mini-card { background:var(--card2);
+    border:1px solid var(--border); border-radius:14px; padding:14px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    margin-bottom:24px; }
+  .mini-avatar { width:44px; height:44px; border-radius:50%; overflow:hidden;
+    background:linear-gradient(135deg,#c9d2ff,#8a9bff); flex-shrink:0; }
+  .mini-avatar img { width:100%; height:100%; object-fit:cover; }
+  .mini-card .mt1 { font-weight:700; font-size:15px; }
+  .mini-card .mt2 { font-size:12px; color:var(--sub); }
+
+  .skills { display:grid; grid-template-columns:repeat(3,1fr); gap:40px;
+    border-top:1px solid var(--border); padding-top:60px; }
+  .skill-col .s-label { font-size:12px; letter-spacing:3px; color:var(--sub);
+    text-transform:uppercase; margin-bottom:16px; }
+  .skill-col h3 { font-size:28px; font-weight:700; margin-bottom:24px; }
+  .skill-tags { display:flex; flex-wrap:wrap; gap:12px; }
+  .skill-tags .tag { font-size:11px; padding:8px 16px; }
+
+  .learn-card { background:var(--card); border:1px solid var(--border);
+    border-radius:24px; padding:70px; display:grid;
+    grid-template-columns:1.3fr 1fr; gap:60px; align-items:center;
+    transition:border-color .35s; }
+  .learn-card:hover { border-color:#3a3a3a; }
+  .learn-card h2 { font-size:48px; font-weight:800; line-height:1.2; }
+  .learn-card p { color:var(--sub); font-size:16px; line-height:2; }
+
+  .timeline { display:flex; flex-direction:column; gap:24px; }
+  .tl-item { background:var(--card); border:1px solid var(--border);
+    border-radius:18px; padding:28px 32px;
+    transition:transform .35s, border-color .35s; }
+  .tl-item:hover { transform:translateX(4px); border-color:#3a3a3a; }
+  .tl-top { display:flex; justify-content:space-between; align-items:baseline;
+    flex-wrap:wrap; gap:10px; margin-bottom:10px; }
+  .tl-title { font-size:20px; font-weight:700; }
+  .tl-sub { font-size:13px; color:var(--sub); }
+  .tl-time { font-size:13px; color:var(--blue); font-weight:600; }
+  .tl-meta { font-size:13px; color:var(--sub); margin-bottom:10px; }
+  .tl-item ul { list-style:none; padding-left:0; }
+  .tl-item li { font-size:14px; color:#cfcfcf; margin-bottom:8px; line-height:1.8;
+    padding-left:16px; position:relative; }
+  .tl-item li::before { content:"›"; position:absolute; left:0; color:var(--blue); }
+  .tl-item li b { color:#fff; }
+
+  .works-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .work { background:var(--card); border:1px solid var(--border);
+    border-radius:20px; padding:34px; min-height:460px;
+    display:flex; flex-direction:column; transition:transform .35s, border-color .35s, box-shadow .35s; }
+  .work:hover { transform:translateY(-6px); border-color:#3a3a3a;
+    box-shadow:0 16px 40px rgba(0,0,0,.35); }
+  .work .cat { font-size:12px; letter-spacing:2px; color:var(--blue);
+    text-transform:uppercase; font-weight:600; margin-bottom:14px; }
+  .work h3 { font-size:24px; font-weight:800; margin-bottom:14px; line-height:1.25; }
+  .work ul { list-style:none; margin-bottom:auto; }
+  .work li { font-size:13.5px; color:var(--sub); margin-bottom:10px; line-height:1.75;
+    padding-left:14px; position:relative; }
+  .work li::before { content:"·"; position:absolute; left:0; color:var(--blue); font-weight:900; }
+  .work li b{color:#ddd;}
+  .work .tagrow{display:flex; gap:8px; margin-top:20px;}
+  .work .mini-tag{font-size:11px; padding:4px 10px; border:1px solid var(--border); border-radius:20px; color:var(--sub);}
+
+  /* 去掉 padding-left，让竖线与圆点中心对齐 */
+  .timeline-mini { position:relative; margin-bottom:auto; }
+  .timeline-mini::before {
+    content:""; position:absolute; left:9px; top:6px; bottom:6px;
+    width:1px; background:var(--border);
+  }
+  .tl-mini-item { position:relative; padding-left:30px; margin-bottom:6px; }
+  .tl-mini-item:last-child { margin-bottom:0; }
+  .tl-dot {
+    position:absolute; left:0; top:14px; width:19px; height:19px;
+    border-radius:50%; background:var(--card2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; z-index:2;
+    transition:border-color .3s, background .3s;
+  }
+  .tl-dot::after {
+    content:""; width:6px; height:6px; border-radius:50%; background:var(--sub);
+    transition:background .3s;
+  }
+  .tl-mini-item.open .tl-dot { border-color:var(--blue); background:#1a2036; }
+  .tl-mini-item.open .tl-dot::after { background:var(--blue); }
+
+  .tl-mini-head {
+    display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; padding:12px 0; user-select:none;
+  }
+  .tl-mini-title { font-size:14.5px; font-weight:700; color:#eee; transition:color .25s; }
+  .tl-mini-head:hover .tl-mini-title { color:#fff; }
+  /* 展开示意图标（向下箭头），展开时旋转 180° */
+  .tl-mini-toggle {
+    width:22px; height:22px; border-radius:50%; border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    color:var(--sub); transition:transform .35s, border-color .3s, color .3s;
+  }
+  .tl-mini-toggle svg { width:12px; height:12px; }
+  .tl-mini-item.open .tl-mini-toggle { transform:rotate(180deg); border-color:var(--blue); color:var(--blue); }
+
+  .tl-mini-body {
+    max-height:0; overflow:hidden; transition:max-height .4s ease;
+  }
+  .tl-mini-body p {
+    font-size:13.5px; color:var(--sub); line-height:1.85; padding:0 0 16px 0;
+  }
+  .tl-mini-body p b { color:#ddd; }
+
+  footer { text-align:center; padding:60px 20px; color:#555; font-size:13px;
+    border-top:1px solid var(--border); letter-spacing:1px; }
+  footer .footer-logo {
+    font-family:'Sacramento', cursive;
+    font-size:26px;
+    background:linear-gradient(100deg, var(--gold-2) 0%, var(--gold-3) 40%, var(--gold-1) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    display:block; margin-bottom:14px; opacity:.85;
+  }
+
+  /* ===== Toast 提示 ===== */
+  #toast {
+    position:fixed; left:50%; bottom:40px; transform:translateX(-50%) translateY(20px);
+    z-index:2000; display:flex; align-items:center; gap:10px;
+    padding:14px 22px; border-radius:40px; font-size:14px; font-weight:500;
+    background:rgba(20,25,20,.92); backdrop-filter:blur(12px);
+    border:1px solid #2f4a3a; color:#bdf5cf;
+    box-shadow:0 10px 40px rgba(0,0,0,.5), 0 0 24px rgba(80,220,150,.12);
+    opacity:0; pointer-events:none; transition:opacity .35s, transform .35s;
+  }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  #toast.error { border-color:#5a3a3a; color:#ffcccc;
+    box-shadow:0 10px 40px rgba(0,0,0,.5), 0 0 24px rgba(220,80,80,.12); }
+  #toast svg { width:18px; height:18px; flex-shrink:0; }
+
+  /* ===== 轻量微动效 ===== */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(24px); }
+                      to   { opacity:1; transform:translateY(0); } }
+  .hero .eyebrow,.hero h1,.hero h2,.hero .intro,.hero .tags,.hero .btns {
+    opacity:0; animation:fadeUp .7s ease forwards;
+  }
+  .hero h1 { animation-delay:.08s; }
+  .hero h2 { animation-delay:.16s; }
+  .hero .intro { animation-delay:.24s; }
+  .hero .tags { animation-delay:.32s; }
+  .hero .btns { animation-delay:.40s; }
+  .hero .photos { opacity:0; animation:fadeUp .8s ease .3s forwards; }
+
+  .reveal { opacity:0; transform:translateY(26px);
+    transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity:1; transform:translateY(0); }
+  .reveal.d1 { transition-delay:.08s; }
+  .reveal.d2 { transition-delay:.16s; }
+  .reveal.d3 { transition-delay:.24s; }
+
+  @media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation:none !important; transition:none !important; }
+  .reveal { opacity:1; transform:none; }
+  /* 新增下面这一行，确保关闭动画时，顶部区域默认可见 */
+  .hero .eyebrow, .hero h1, .hero h2, .hero .intro, .hero .tags, .hero .btns, .hero .photos { 
+    opacity:1 !important; 
+    transform:none !important; 
+  }
+}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;} .hero h1{font-size:64px;}
+    .photos{display:none;} .big-title{font-size:38px;}
+    .profile-grid,.skills,.works-grid{grid-template-columns:1fr;}
+    .learn-card{grid-template-columns:1fr; padding:40px;}
+    .learn-card h2{font-size:32px;} .nav-links{display:none;}
+    .wrap{padding:0 24px;}
+    .logo{font-size:28px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <div class="logo">Gaowenhan</div>
+    <div class="nav-links">
+      <a href="#profile">个人信息</a>
+      <a href="#education">教育背景</a>
+      <a href="#experience">工作经历</a>
+      <a href="#works">项目经历</a>
+      <a href="#footer">联系方式</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <!-- HERO -->
+ <section class="hero">
+    <div>
+      <div class="eyebrow">让产品好用，让用户爱用</div>
+      <h1>高文涵</h1>
+      <h2>AI / UX 设计师</h2>
+      <p class="intro">4年全栈式设计经验，聚焦AI/智能办公方向，擅长将大模型、Agent、工作流等能力转化为落地产品体验，运用 Vibe Coding 快速构建可交互原型验证想法。本硕设计学背景，学习与抗压能力强，愿意接受挑战性工作，善于沟通、可与内外部团队高效协同。</p>
+      <div class="tags">
+        <span class="tag">AI 工具链搭建</span>
+        <span class="tag">AI 产品体验设计</span>
+        <span class="tag">0-1 框架搭建</span>
+        <span class="tag">设计规范体系</span>
+      </div>
+      <div class="btns">
+        <!-- 点击直接下载图片，不预览 -->
+        <a class="btn btn-download" href="#" onclick="downloadFile(event, 'https://cdn.jsdelivr.net/gh/gaowenhan76-debug/my-resume@main/resume2026.png', '高文涵-简历.png', '简历下载成功，请查看下载文件夹')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/>
+          </svg>
+          RESUME
+        </a>
+        <!-- PORTFOLIO 按钮 - 点击下载作品集 PDF -->
+        <a class="btn btn-outline" href="#" onclick="downloadFile(event, 'https://cdn.jsdelivr.net/gh/gaowenhan76-debug/my-resume@main/2026portfolio.pdf', '高文涵-作品集.pdf', '作品集下载成功，请查看下载文件夹')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/>
+          </svg>
+          PORTFOLIO
+        </a>
+        <!-- Vibe Coding 按钮，跳转到 vibeCoding 页面 -->
+        <a class="btn btn-vibe" href="https://gaowenhan76-debug.github.io/my-resume/vibeCoding.html" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 6l-6 6 6 6"/><path d="M16 6l6 6-6 6"/>
+          </svg>
+          Vibe Coding demo
+        </a>
+      </div>
+    </div>
+    <div class="photos">
+      <div class="photo p-main">
+        <img src="https://cdn.jsdelivr.net/gh/gaowenhan76-debug/my-resume@main/gwh.jpg" alt="高文涵个人照片">
+      </div>
+      <div class="photo-card">
+        <div>
+          <div class="t1">求职意向</div>
+          <div class="t2">AI / UX 设计师</div>
+          <div class="t3">现任蚂蚁集团 · 蚂蚁鑫能高级体验设计师</div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profile">
+    <div class="label reveal">Profile</div>
+    <h2 class="big-title reveal">不让产品等太久，<br>不给前端找麻烦。</h2>
+    <div class="profile-grid">
+      <div class="p-card info reveal">
+        <h3>About Me</h3>
+        <div class="mini-card">
+          <div class="mini-avatar"><img src="https://cdn.jsdelivr.net/gh/gaowenhan76-debug/my-resume@main/gwh.jpg" alt="高文涵头像"></div>
+          <div>
+            <div class="mt1">高文涵</div>
+            <div class="mt2">哈尔滨工程大学 设计学硕士（保送）</div>
+          </div>
+        </div>
+        <div class="meta">28岁 女｜base 杭州 <br>gaowenhan1997@qq.com｜195 1123 0456</div>
+        <div class="meta">4 年全栈式设计经验，聚焦 AI / 智能办公方向</div>
+        <div class="meta">擅长将大模型、Agent、工作流能力转化为可控体验，运用 Vibe Coding 快速构建可交互原型</div>
+      </div>
+      <div class="p-card reveal d1"><div class="num">4<span class="unit">+ 年</span></div><div class="desc">AI / 智能办公方向体验设计经验</div></div>
+      <div class="p-card reveal d2"><div class="num">50<span class="unit">+ %</span></div><div class="desc">团队成员生产效率提升 · 经验沉淀与分享</div></div>
+      <div class="p-card reveal d3"><div class="num">0-1</div><div class="desc">主导企业级 AI 智能方向产品从 0 到 1 设计探索</div></div>
+    </div>
+
+    <div class="skills" style="margin-top:60px;">
+      <div class="skill-col reveal">
+        <div class="s-label">AI Empowered Design</div>
+        <h3>AI 赋能设计</h3>
+        <div class="skill-tags">
+          <span class="tag">Vibe Coding 原型</span><span class="tag">CodeFuse CLI</span>
+          <span class="tag">Design Review Skill</span><span class="tag">AIGC 工作方法论</span>
+        </div>
+      </div>
+      <div class="skill-col reveal d1">
+        <div class="s-label">Product Experience</div>
+        <h3>产品体验设计</h3>
+        <div class="skill-tags">
+          <span class="tag">0-1 框架搭建</span><span class="tag">设计规范体系</span>
+          <span class="tag">交互设计</span><span class="tag">用户研究</span>
+        </div>
+      </div>
+      <div class="skill-col reveal d2">
+        <div class="s-label">Tools</div>
+        <h3>设计工具</h3>
+        <div class="skill-tags">
+          <span class="tag">Figma</span><span class="tag">Sketch</span>
+          <span class="tag">Photoshop / AI</span><span class="tag">Axure</span>
+          <span class="tag">Principle</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEARNING PATH -->
+  <section>
+    <div class="learn-card reveal">
+      <div>
+        <div class="label">Working Ability</div>
+        <h2>竞品分析、交互设计<br>视觉设计、设计驱动</h2>
+      </div>
+      <p>多维度竞品分析产出洞察报告；擅长复杂系统信息架构重组，视觉规范统一；建立设计驱动开发的协作机制，缩短设计-开发沟通成本，用 AI 工具链提升团队整体协作效率。</p>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="label reveal">Education</div>
+    <h2 class="big-title reveal">教育背景</h2>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-top">
+          <div class="tl-title">哈尔滨工程大学 · 设计学硕士（保送）</div>
+          <div class="tl-time">2019.09 – 2022.07</div>
+        </div>
+        <div class="tl-meta">机电工程学院研学会 · 副主席 ｜ GPA 3.84 / 4.0（Top 1，前5%）</div>
+        <ul>
+          <li>核心课程：设计心理学、设计语言学、人机工程学、视觉传达、设计文化与美学等</li>
+          <li>比赛获奖：全国大学生机器人创业赛二等奖、互联网大学生创新创业赛三等奖</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal d1">
+        <div class="tl-top">
+          <div class="tl-title">哈尔滨工程大学 · 产品设计学士</div>
+          <div class="tl-time">2015.09 – 2019.07</div>
+        </div>
+        <div class="tl-meta">工业设计系学生党支部 · 党务书记 ｜ GPA 3.7 / 4.0（Top 2，前5%）</div>
+        <ul>
+          <li>核心课程：材料工艺、机械原理、编排设计、产品形态设计、设计调研、企业形象设计等</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK EXPERIENCE -->
+  <section id="experience">
+    <div class="label reveal">Work Experience</div>
+    <h2 class="big-title reveal">工作经历</h2>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-top">
+          <div>
+            <div class="tl-title">蚂蚁集团 · 蚂蚁鑫能 AIoT / 体验设计师</div>
+            <div class="tl-sub">主导企业级 AI 智能方向产品 0-1 设计探索</div>
+          </div>
+          <div class="tl-time">2025.10 – 至今</div>
+        </div>
+        <ul>
+          <li>主导企业级 AI 智能方向产品 0-1 设计探索，将大模型 / 工作流能力转化为可信可控的操作体验；</li>
+          <li>使用 <b>CodeFuse CLI</b> 修改前端样式进行设计还原，细粒度传达走查-修改-验证工作流程，提效数十倍。</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal d1">
+        <div class="tl-top">
+          <div>
+            <div class="tl-title">海康威视 · 智慧屏与会议产品业务部 / 体验设计师</div>
+          </div>
+          <div class="tl-time">2022.07 – 2025.09</div>
+        </div>
+        <ul>
+          <li>主导会议管理平台、会议室软件、无线投屏 App 等全方位视觉设计工作；</li>
+          <li>获得部门年度优秀设计师 2 次、项目冠军 1 次（组内首次）。</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal d2">
+        <div class="tl-top">
+          <div>
+            <div class="tl-title">杭州程天科技发展有限公司 · 产品设计师</div>
+          </div>
+          <div class="tl-time">2019.06 – 2019.09</div>
+        </div>
+        <ul>
+          <li>参与水下质量监控机器人操控台、宣发设计，实现 6 次参赛获奖、拉新效果提升 20%。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="works">
+    <div class="label reveal">Selected Projects</div>
+    <h2 class="big-title reveal">项目经历</h2>
+    <div class="works-grid">
+      <div class="work reveal">
+        <div class="cat">0-1 / Web / TOB</div>
+        <h3>电力虚拟交易平台 WattClaw</h3>
+
+        <div class="timeline-mini">
+          <div class="tl-mini-item">
+            <div class="tl-mini-head" onclick="toggleMini(this)">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="tl-dot"></span>
+                <span class="tl-mini-title">代码修改</span>
+              </div>
+              <span class="tl-mini-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+            <div class="tl-mini-body">
+              <p>使用 <b>CodeFuse CLI</b> 配置前端开发环境，完成研发环境验证，掌握前端基础语言，使用 antcc 直接修改前端样式，缩短前端-设计-开发的沟通成本。</p>
+            </div>
+          </div>
+
+          <div class="tl-mini-item">
+            <div class="tl-mini-head" onclick="toggleMini(this)">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="tl-dot"></span>
+                <span class="tl-mini-title">Skill 编写</span>
+              </div>
+              <span class="tl-mini-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+            <div class="tl-mini-body">
+              <p>创建设计规范审查 <b>design-review Skill</b>，自动扫描代码风格与设计规范的一致性，支持自动化生成 AntCode 创建设计驱动 Issue。</p>
+            </div>
+          </div>
+
+          <div class="tl-mini-item">
+            <div class="tl-mini-head" onclick="toggleMini(this)">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="tl-dot"></span>
+                <span class="tl-mini-title">视觉规范</span>
+              </div>
+              <span class="tl-mini-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+            <div class="tl-mini-body">
+              <p>从 AI 筛选 <b>30+ 控件、20+ 模块</b>的设计规范与组件库，在复杂系统中建立清晰、精密、高效的协作模式，确保规范的一致性与规范性。</p>
+            </div>
+          </div>
+
+          <div class="tl-mini-item">
+            <div class="tl-mini-head" onclick="toggleMini(this)">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="tl-dot"></span>
+                <span class="tl-mini-title">经验沉淀</span>
+              </div>
+              <span class="tl-mini-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+            <div class="tl-mini-body">
+              <p>输出 AIGC 工作方法论，组织设计分享会，发表 ATA 文章，促进团队成员生产效率提升 <b>50%+</b>。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tagrow"><span class="mini-tag">CodeFuse CLI</span><span class="mini-tag">AIGC</span></div>
+      </div>
+
+      <div class="work reveal d1">
+        <div class="cat">1-n / PC网 · Web端 / TOB</div>
+        <h3>会议管理平台前台（V0-V3）</h3>
+        <ul>
+          <li><b>竞品分析：</b>深度体验 3 款主流竞品产品，围绕功能模块、交互逻辑、视觉风格、信息量等维度做交叉洞察分析形成报告，用 80% 分析结论论证方向决策；</li>
+          <li><b>Web端设计：</b>设计简洁高效的前台交互模式，将会议预约操作步骤减少至 3 步以内，会议信息通过图形化标签方式呈现，使用户快速获取核心信息效率提升 40%，统一图标样式认知效率提升 4.8/5 分；</li>
+          <li><b>移动端设计：</b>针对不同屏幕尺寸进行响应式交互适配，确保在主流手机屏幕上的网页操作体验流畅度，主流设备操控异常率控制在 3% 以下。</li>
+        </ul>
+        <div class="tagrow"><span class="mini-tag">交互设计</span><span class="mini-tag">响应式</span></div>
+      </div>
+
+      <div class="work reveal d2">
+        <div class="cat">0-1 / PC端 · 手机端 / TOB</div>
+        <h3>会议产品 AI 智能助手</h3>
+        <ul>
+          <li><b>用户研究：</b>通过访谈同用户角色 20+ 人，问卷发放 260+ 份，场景模拟 10+ 次挖掘细分需求；</li>
+          <li><b>交互设计：</b>定义触发方式及输出流程，输出超过 10+ 张目标产品的体验原型测试，收集用户反馈迭代优化提升通过率，方案迭代 20 次；</li>
+          <li><b>视觉创意：</b>使用 AI 工具生成视觉元素及助力手中原型，输出形象设计方案 20 组，设计界面 100+。</li>
+        </ul>
+        <div class="tagrow"><span class="mini-tag">用户研究</span><span class="mini-tag">AI 生成视觉</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer id="footer">
+  <div class="footer-logo">Gaowenhan</div>
+  <div>© 2026 高文涵 · AI / UX Designer · gaowenhan1997@qq.com · 195 1123 0456</div>
+</footer>
+
+<!-- Toast 提示容器 -->
+<div id="toast">
+  <span id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+  let toastTimer = null;
+  function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = document.getElementById('toast-icon');
+    const msgEl = document.getElementById('toast-msg');
+    icon.innerHTML = type === 'success'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>';
+    msgEl.textContent = msg;
+    toast.classList.toggle('error', type === 'error');
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 3000);
+  }
+
+  // 通用下载函数（点击瞬间即弹出成功 Toast，后台下载，失败再覆盖为错误提示）
+  function downloadFile(e, url, filename, successMsg) {
+    e.preventDefault();
+    showToast(successMsg, 'success'); // 点击立即提示
+    (async () => {
+      try {
+        const res = await fetch(url, { mode: 'cors' });
+        if (!res.ok) throw new Error('network');
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(blobUrl);
+      } catch (err) {
+        window.open(url, '_blank');
+        showToast('已在新标签页打开，可长按/右键保存', 'error');
+      }
+    })();
+  }
+
+  function toggleMini(headEl) {
+    const item = headEl.closest('.tl-mini-item');
+    const body = item.querySelector('.tl-mini-body');
+    const isOpen = item.classList.contains('open');
+    if (isOpen) { closeItem(item); } else { openItem(item, body); }
+  }
+  function openItem(item, body) {
+    item.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+  function closeItem(item) {
+    const body = item.querySelector('.tl-mini-body');
+    item.classList.remove('open');
+    body.style.maxHeight = 0;
+  }
+
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.tl-mini-item.open .tl-mini-body').forEach(body => {
+      body.style.maxHeight = body.scrollHeight + 'px';
+    });
+  });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.12, rootMargin:'0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
