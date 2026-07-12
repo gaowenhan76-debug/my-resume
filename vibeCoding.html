@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>能源数据中心</title>
+<style>
+:root{--primary:#3b5bfd;--bg:#f4f6fb;--card:#fff;--line:#eef1f7;--text:#1e2436;--sub:#8a93a8;--orange:#f5a623;--red:#ef4444;--amber:#f59e0b;--blue:#3b82f6;--green:#22c55e;--deep:#10b981;--gap:20px;--radius:18px;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,"HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",Inter,sans-serif}
+body{background:var(--bg);color:var(--text)}
+.topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.topbar-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:32px;padding:0 32px;height:66px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .lg{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#5b6ef5,#7c4dff);display:grid;place-items:center;color:#fff;font-size:21px;box-shadow:0 6px 16px rgba(91,110,245,.35)}
+.brand .tt{font-weight:800;font-size:18px}
+.brand .en{font-size:9px;color:var(--sub);letter-spacing:1px}
+.mainnav{display:flex;gap:6px;height:100%}
+.mainnav a{display:flex;align-items:center;gap:8px;padding:0 18px;font-size:15px;font-weight:500;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.mainnav a:hover{color:var(--text)}
+.mainnav a.active{color:var(--primary);font-weight:700;border-bottom-color:var(--primary)}
+.mainnav a .ic{font-size:16px}
+.topbar .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.topbar .src{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sub);background:#f7f8fc;border:1px solid var(--line);padding:8px 14px;border-radius:10px}
+.topbar .clock{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
+.topbar .clock b{color:var(--text);font-variant-numeric:tabular-nums}
+main{max-width:1400px;margin:0 auto;padding:26px 32px}
+.page-head{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.page-head .pi{font-size:22px}
+.page-head h1{font-size:22px;font-weight:800}
+.page{display:none} .page.on{display:block;animation:fade .3s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:0 2px 12px rgba(30,40,80,.03)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);margin-bottom:var(--gap)}
+.kpi{display:flex;align-items:center;gap:18px}
+.kpi .ico{width:56px;height:56px;border-radius:14px;background:#f2f5fb;display:grid;place-items:center;font-size:26px;flex:0 0 56px}
+.kpi .lb{font-size:14px;color:var(--sub);margin-bottom:6px}
+.kpi .vl{font-size:30px;font-weight:800;letter-spacing:-1px}
+.kpi .vl span{font-size:14px;color:var(--sub);font-weight:500;margin-left:4px}
+.kpi .badge{margin-left:auto;background:#fff0f0;color:var(--red);font-size:12px;font-weight:700;padding:6px 10px;border-radius:8px}
+.split{display:grid;grid-template-columns:1fr 340px;gap:var(--gap);align-items:start}
+.stack{display:flex;flex-direction:column;gap:var(--gap)}
+.ch-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.ch-head .ci{width:44px;height:44px;border-radius:12px;background:#eef1ff;display:grid;place-items:center;font-size:20px;flex:0 0 44px}
+.ch-head h2{font-size:22px;font-weight:800;line-height:1.2}
+.ch-head .sub{font-size:13px;color:var(--sub);margin-top:4px}
+.ch-head .more{margin-left:auto;background:#f7f8fc;border:1px solid var(--line);padding:10px 18px;border-radius:10px;font-size:14px;color:var(--text);cursor:pointer;font-weight:600;white-space:nowrap}
+.legend{display:flex;gap:18px;justify-content:flex-end;margin-bottom:6px;font-size:13px;color:var(--sub)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:50%;border:2px solid;display:inline-block}
+.feed h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.feed .en{font-size:10px;color:var(--sub);letter-spacing:1px;margin:2px 0 16px 26px}
+.feed .more-s{margin-left:auto;font-size:13px;color:var(--sub);cursor:pointer}
+.feed-item{padding:12px 0;border-bottom:1px solid var(--line)}
+.feed-item:last-child{border:none;padding-bottom:0}
+.feed-item .t{font-size:14px;font-weight:600;line-height:1.5}
+.feed-item .m{font-size:12px;color:var(--sub);margin-top:8px;display:flex;align-items:center;gap:8px}
+.tag-g{background:#e9fbf0;color:var(--deep);font-size:11px;padding:2px 8px;border-radius:6px}
+.tag-y{background:#fff6e5;color:var(--orange);font-size:11px;padding:2px 8px;border-radius:6px}
+.filters{margin-bottom:var(--gap)}
+.frow{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.frow:first-child{padding-top:0}
+.frow:last-child{border:none;padding-bottom:0}
+.frow .lab{width:110px;flex:0 0 110px;font-size:14px;color:var(--sub);display:flex;align-items:center;gap:8px;padding-top:5px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;flex:1}
+.chip{padding:7px 16px;border:1px solid var(--line);border-radius:9px;font-size:13px;cursor:pointer;background:#fff;transition:.12s;color:var(--text)}
+.chip:hover{border-color:#c4ccff}
+.chip.on{background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600}
+.chip.dis{color:#c2c8d4;cursor:not-allowed}
+/* 行政区域折叠 */
+.region-area{flex:1;display:flex;gap:12px;align-items:flex-start}
+.region-chips{flex:1;display:flex;flex-wrap:wrap;gap:10px;max-height:44px;overflow:hidden;transition:max-height .3s ease}
+.region-area.expanded .region-chips{max-height:500px}
+.region-toggle{flex:0 0 auto;display:flex;align-items:center;gap:4px;font-size:13px;color:var(--primary);cursor:pointer;padding:7px 12px;border:1px solid #dfe4ff;border-radius:9px;background:#f7f9ff;white-space:nowrap;user-select:none}
+.region-toggle .arr{transition:transform .3s}
+.region-area.expanded .region-toggle .arr{transform:rotate(180deg)}
+.date-in{border:1px solid var(--line);border-radius:9px;padding:8px 14px;font-size:14px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;position:relative}
+.hint{font-size:13px;color:#a9b0c0;font-style:italic;margin-left:14px;align-self:center}
+.ai-card{background:#f7f9ff;color:var(--text);border:1px solid #e4e9f7;border-radius:var(--radius);padding:26px}
+.ai-card .h{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ai-card .h .ci{width:40px;height:40px;border-radius:10px;background:#eef1ff;display:grid;place-items:center;flex:0 0 40px}
+.ai-card .h b{font-size:17px;font-weight:800}
+.ai-card .gm{margin-left:auto;font-size:11px;background:#eef1ff;padding:5px 10px;border-radius:8px;color:var(--primary);display:flex;align-items:center;gap:6px}
+.ai-card .gm .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.ai-card .st{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.ai-card ul{list-style:none}
+.ai-card li{font-size:14px;color:#5a6478;line-height:1.7;margin-bottom:12px;padding-left:16px;position:relative}
+.ai-card li:last-child{margin-bottom:0}
+.ai-card li::before{content:'';position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--primary)}
+.ai-card b.hl{color:var(--text);font-weight:700}
+.ai-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:15px;border-radius:12px;font-size:15px;font-weight:700;margin-top:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s}
+.ai-btn:hover{background:#2b4be0}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:12px;font-size:14px;font-weight:700;color:var(--sub);text-align:center}
+.cal-head .we{color:var(--red)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.day{border:1px solid var(--line);border-radius:12px;padding:14px 12px;min-height:120px;cursor:pointer;transition:.15s;display:flex;flex-direction:column}
+.day:hover{border-color:#c4ccff;box-shadow:0 4px 14px rgba(59,91,253,.1)}
+.day.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.day.on .avg,.day.on .diff{color:#fff}
+.day.we{background:#fafbfe}
+.day .dn{font-size:18px;font-weight:800}
+.day .avg{font-size:12px;color:var(--sub);display:flex;justify-content:space-between;margin-top:auto}
+.day .diff-box{background:#e9fbf0;border-radius:8px;padding:6px 8px;margin-top:8px}
+.day.on .diff-box{background:rgba(255,255,255,.2)}
+.day .diff{font-size:11px;color:var(--deep);display:flex;justify-content:space-between;font-weight:700}
+.day .bar{height:5px;border-radius:3px;margin-top:8px;background:linear-gradient(90deg,var(--amber) 30%,var(--red) 30% 45%,var(--blue) 45% 75%,var(--green) 75%)}
+.search-box{display:flex;gap:16px;margin-bottom:var(--gap)}
+.search-box input{flex:1;border:1px solid var(--line);border-radius:14px;padding:20px 24px;font-size:16px;background:#fff}
+.search-box .sbtn{background:#111827;color:#fff;border:none;padding:0 34px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap}
+.hot{display:flex;align-items:center;gap:12px;margin-bottom:var(--gap);font-size:14px;color:var(--sub);flex-wrap:wrap}
+.hot .h{padding:7px 16px;background:#fff;border:1px solid var(--line);border-radius:20px;font-size:13px;color:var(--text);cursor:pointer}
+.pol-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.pol{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;cursor:pointer;transition:.15s;display:flex;flex-direction:column}
+.pol:hover{border-color:#c4ccff;box-shadow:0 6px 20px rgba(30,40,80,.06)}
+.pol .top-p{display:flex;gap:16px;margin-bottom:16px}
+.pol .fico{width:56px;height:56px;border-radius:12px;background:#f2f5fb;display:grid;place-items:center;font-size:22px;color:var(--sub);flex:0 0 56px}
+.pol.hl .fico{background:var(--primary);color:#fff}
+.pol h4{font-size:17px;font-weight:800;line-height:1.4}
+.pol.hl h4{color:var(--primary)}
+.pol .st{background:#e9fbf0;color:var(--deep);font-size:12px;padding:3px 10px;border-radius:6px;display:inline-block;margin-top:8px}
+.pol .region{font-size:13px;color:var(--sub);margin-bottom:12px}
+.pol .desc{font-size:13px;color:#9aa4bc;line-height:1.7;margin-bottom:20px;flex:1}
+.pol .foot{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--sub)}
+.pol .read{color:var(--primary);font-weight:700;cursor:pointer}
+.cat-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+.cat-card h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.cat-item{display:flex;justify-content:space-between;padding:14px 18px;border-radius:10px;font-size:14px;cursor:pointer;margin-bottom:6px}
+.cat-item:last-child{margin-bottom:0}
+.cat-item.on{background:var(--primary);color:#fff;font-weight:700}
+.cat-item:not(.on):hover{background:#f7f8fc}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.dl{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px;display:flex;flex-direction:column}
+.dl .h{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.dl .h .ci{width:48px;height:48px;border-radius:12px;background:#fdeeee;display:grid;place-items:center;font-size:22px;flex:0 0 48px}
+.dl .h .ci.blue{background:#eef1ff}
+.dl .h b{font-size:19px;font-weight:800}
+.dl .raw{margin-left:auto;font-size:11px;background:#f2f5fb;color:var(--sub);padding:5px 10px;border-radius:6px;font-weight:700}
+.dl .desc{font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:24px}
+.dl .fl{font-size:13px;color:var(--sub);margin-bottom:8px}
+.dl .fake-sel{width:100%;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:15px;background:#fff;margin-bottom:20px;color:var(--text);display:flex;justify-content:space-between;align-items:center;cursor:pointer;position:relative}
+.dl-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:16px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto}
+.dl .note{font-size:13px;color:var(--sub);margin-top:14px;display:flex;align-items:center;gap:8px}
+.mi{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
+.mi:last-child{margin-bottom:0}
+.mi .ci{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:18px;flex:0 0 44px}
+.mi .lb{font-size:13px;color:var(--sub)}
+.mi .vl{font-size:20px;font-weight:800}
+.mi .rt{margin-left:auto;text-align:right}
+.mi .rt .top{font-size:11px;color:var(--sub)}
+.mi .rt .n{font-size:16px;font-weight:800}
+.chart-tip{position:fixed;background:rgba(17,24,39,.96);color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;pointer-events:none;z-index:100;opacity:0;transition:opacity .12s;box-shadow:0 8px 24px rgba(0,0,0,.25);white-space:nowrap}
+.chart-tip .tt-time{font-size:12px;color:#9aa4bc;margin-bottom:6px}
+.chart-tip .tt-row{display:flex;align-items:center;gap:8px;line-height:1.6}
+.chart-tip .tt-dot{width:8px;height:8px;border-radius:50%}
+.bar-hit,.line-hit{cursor:pointer}
+.dd-panel{position:absolute;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(30,40,80,.15);padding:8px;z-index:60;max-height:280px;overflow:auto;min-width:200px}
+.dd-panel .opt{padding:10px 14px;border-radius:8px;font-size:14px;cursor:pointer}
+.dd-panel .opt:hover{background:#f2f5fb}
+.dp{position:absolute;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(30,40,80,.15);padding:16px;z-index:70;width:280px}
+.dp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dp-head b{font-size:15px}
+.dp-head span{cursor:pointer;padding:4px 10px;border-radius:6px;color:var(--sub);font-size:18px}
+.dp-head span:hover{background:#f2f5fb}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dp-grid .wd{font-size:11px;color:var(--sub);text-align:center;padding:4px}
+.dp-grid .d{text-align:center;padding:8px 0;border-radius:8px;font-size:13px;cursor:pointer}
+.dp-grid .d:hover{background:#f2f5fb}
+.dp-grid .d.on{background:var(--primary);color:#fff}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;z-index:200;opacity:0;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{padding:50px;text-align:center;color:#a9b0c0;grid-column:1/-1}
+.back-btn{background:#fff;border:1px solid var(--line);padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text)}
+.back-btn:hover{background:#f2f5fb}
+.rep-sec h3{font-size:17px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.insight{background:#f7f9ff;border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:16px 20px;font-size:14px;line-height:1.9;color:#5a6478;margin-bottom:12px}
+.insight:last-child{margin-bottom:0}
+.insight b{color:var(--text)}
+.strategy{display:flex;gap:16px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:12px;margin-bottom:12px}
+.strategy:last-child{margin-bottom:0}
+.strategy .num{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:700;flex:0 0 32px}
+.strategy .txt{font-size:14px;line-height:1.6;color:#5a6478}
+.strategy .txt b{display:block;margin-bottom:4px;font-size:15px;color:var(--text)}
+.disclaimer{font-size:12px;color:#a9b0c0;padding:16px;background:#f7f8fc;border-radius:10px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><div class="lg">⚡</div><div><div class="tt">能源数据中心</div><div class="en">ENERGY DATA CENTER</div></div></div>
+    <nav class="mainnav">
+      <a class="active" data-p="work"><span class="ic">🏠</span>工作台</a>
+      <a data-p="query"><span class="ic">📊</span>电价查询</a>
+      <a data-p="cal"><span class="ic">📅</span>电价日历</a>
+      <a data-p="trend"><span class="ic">📈</span>趋势分析</a>
+      <a data-p="policy"><span class="ic">📄</span>政策查询</a>
+      <a data-p="download"><span class="ic">📥</span>数据下载</a>
+    </nav>
+    <div class="right">
+      <div class="src">🗄 国家电网 / 地方发改委</div>
+      <div class="clock">🕐 <b id="clk">11:45:20</b> | 2026-07-12</div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="page-head"><span class="pi" id="topIcon">🏠</span><h1 id="topTitle">工作台</h1></div>
+
+  <section class="page on" id="work">
+    <div class="kpis">
+      <div class="card kpi"><div class="ico" style="background:#eef1ff">💰</div><div><div class="lb">今日加权平均电价</div><div class="vl">0.78760617<span>元/kWh</span></div></div></div>
+      <div class="card kpi"><div class="ico" style="background:#fff6e5">⚡</div><div><div class="lb">最大峰谷价差</div><div class="vl">1.119054<span>元</span></div></div></div>
+      <div class="card kpi"><div class="ico" style="background:#e9fbf0">📋</div><div><div class="lb">最新政策更新</div><div class="vl">33<span>条 / 共 1724 条</span></div></div><div class="badge">↗ 最近30天</div></div>
+    </div>
+    <div class="split">
+      <div class="card">
+        <div class="ch-head"><div class="ci">📊</div><div><h2>上海 · 今日分时电价</h2><div class="sub">大工业用电 · 两部制 · 35千伏 · 24H 电价走势</div></div><div class="more">🔍 更多电价查询</div></div>
+        <div class="legend" id="legend"></div><div id="chart1"></div>
+      </div>
+      <div class="stack">
+        <div class="card feed">
+          <h3>🔔 最新动态 <span class="more-s">更多 ›</span></h3><div class="en">PLATFORM VERSION FEEDS</div>
+          <div class="feed-item"><div class="t">7月全国工商业代理购电价格数据以及公示已更新</div><div class="m">🕐 2026-07-01 <span class="tag-g">数据</span></div></div>
+          <div class="feed-item"><div class="t">分时电价可视化模块完成升级</div><div class="m">🕐 2026-06-20 <span class="tag-y">公告</span></div></div>
+        </div>
+        <div class="card feed">
+          <h3>📄 最新政策 <span class="more-s">全部政策 ›</span></h3><div class="en">ENERGY POLICY UPDATES</div>
+          <div class="feed-item"><div class="t">国网吉林省电力有限公司2026年7月代理购电工商业用户电价</div><div class="m">🕐 2026-07-01 · 国家电网</div></div>
+          <div class="feed-item"><div class="t">云南电网有限责任公司2026年7月代理购电工商业用户电价表</div><div class="m">🕐 2026-07-01</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="query">
+    <div class="card filters" id="filtersQuery"></div>
+    <div class="split">
+      <div class="card">
+        <div class="ch-head"><div class="ci">📊</div><div><h2>上海 · 2026年7月11日分时电价</h2><div class="sub">大工业用电 · 两部制 · 35千伏 · 24H 电价走势</div></div></div>
+        <div class="legend clone-legend"></div><div class="chart-clone"></div>
+      </div>
+      <div class="ai-card">
+        <div class="h"><div class="ci">🤖</div><b>2026年7月数据分析</b><span class="gm"><span class="dot"></span>GEMINI 3</span></div>
+        <div class="st">今日数据概要</div>
+        <ul><li>今日加权平均电价约为 <b class="hl">0.7876 元/kWh</b>。</li><li>今日最大价差为 <b class="hl">1.119054 元/kWh</b>，套利空间充足。</li><li>建议在 <b class="hl">深谷时段（22:00-06:00）</b>充电，尖峰时段放电。</li></ul>
+        <button class="ai-btn">✨ 查看完整智能分析报告 →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="cal">
+    <div class="card filters" id="filtersCal"></div>
+    <div class="split">
+      <div class="card">
+        <div class="ch-head"><div class="ci" style="background:var(--primary);color:#fff">📅</div><div><h2>电价执行日历</h2><div class="sub">CROSS-YEAR ENERGY CALENDAR</div></div><div class="more">📅 2026年7月电价概览，点击日期查看详情</div></div>
+        <div class="cal-head"><div>星期一</div><div>星期二</div><div>星期三</div><div>星期四</div><div>星期五</div><div class="we">星期六</div><div class="we">星期日</div></div>
+        <div class="cal" id="calGrid"></div>
+      </div>
+      <div class="ai-card">
+        <div class="h"><div class="ci">🤖</div><b>2026年7月数据分析</b><span class="gm"><span class="dot"></span>GEMINI 3</span></div>
+        <div class="st">本月数据分析</div>
+        <ul><li>本月最大价差为 <b class="hl">1.1191 元/kWh</b>，套利空间充足。</li><li>全月加权平均电价约为 <b class="hl">0.7876 元/kWh</b>，建议优化负荷结构。</li><li>本月 1-31日 日价差最为显著，建议执行满额充放电策略。</li></ul>
+        <button class="ai-btn">✨ 查看完整智能分析报告 →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="trend">
+    <div class="card filters" id="filtersTrend"></div>
+    <div class="split">
+      <div class="card">
+        <div class="ch-head"><div class="ci">📈</div><div><h2>上海 · 最近六个月月度价格趋势对比</h2><div class="sub">大工业用电 · 两部制 · 35千伏</div></div></div>
+        <div class="legend" id="trendLegend"></div><div id="trendChart"></div>
+      </div>
+      <div class="card">
+        <div class="ch-head"><div class="ci">✨</div><div><h2 style="font-size:18px">数据概览</h2><div class="sub">MACRO INSIGHTS</div></div></div>
+        <div class="mi"><div class="ci" style="background:#fdeeee">⚡</div><div><div class="lb">尖峰月份</div><div class="vl">7月</div></div><div class="rt"><div class="top">Top</div><div class="n" style="color:var(--red)">¥1.4404</div></div></div>
+        <div class="mi"><div class="ci" style="background:#e9fbf0">📅</div><div><div class="lb">深谷优化窗口</div><div class="vl">2-6月</div></div><div class="rt"><div class="top">Deep Valley</div><div class="n" style="color:var(--deep)">¥0.1856</div></div></div>
+        <div class="mi"><div class="ci" style="background:#fff6e5">📈</div><div><div class="lb">峰值月度变动 PEAK GROWTH</div><div class="vl" style="color:var(--orange)">+14.9%</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="policy">
+    <div class="split">
+      <div>
+        <div class="search-box"><input placeholder="搜索关键词、正文、文号..."><button class="sbtn">检索 →</button></div>
+        <div class="hot"><span>热门检索：</span><span class="h">工商业</span><span class="h">代理购电</span><span class="h">分时电价</span><span class="h">电价政策</span></div>
+        <div class="pol-grid" id="polGrid"></div>
+      </div>
+      <div class="stack">
+        <div class="cat-card">
+          <h3>🔔 政策分类</h3>
+          <div class="cat-item on">全部档案 <span>1724</span></div>
+          <div class="cat-item">电价政策 <span>87</span></div>
+          <div class="cat-item">购电公示 <span>1637</span></div>
+        </div>
+        <div class="cat-card">
+          <h3>📍 关注地区政策</h3>
+          <div style="font-size:13px;color:var(--sub);line-height:1.7">选择你关注的地区，第一时间获取当地最新电价政策更新与解读。</div>
+          <div class="chips" style="margin-top:16px"><span class="chip on">上海</span><span class="chip">江苏</span><span class="chip">浙江</span><span class="chip">广东</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="download">
+    <div class="dl-grid">
+      <div class="dl">
+        <div class="h"><div class="ci">📑</div><b>政策批量归档</b><span class="raw">PDF / IMAGE</span></div>
+        <div class="desc">打包下载指定区域、特定年份的政策文件。<br>包含 <b>38</b> 个省市地区，共 <b>1724</b> 条政策和电价公示。</div>
+        <div class="fl">行政区域</div><div class="fake-sel">上海 <span>⌄</span></div>
+        <div class="fl">归档年份</div><div class="fake-sel">2026年度 <span>▽</span></div>
+        <button class="dl-btn">⬇ 打包下载政策文件</button>
+        <div class="note">ⓘ 政策文件不限下载次数</div>
+      </div>
+      <div class="dl">
+        <div class="h"><div class="ci blue">🗄</div><b>历史电价导出</b><span class="raw">RAW DATA</span></div>
+        <div class="desc">导出高精度的分时电价历史数据，支持自定义时间粒度。默认导出csv格式文件。<br>数据可导入EMS或财务系统。</div>
+        <div class="fl">行政区域</div><div class="fake-sel">上海 <span>⌄</span></div>
+        <div class="fl">选择月份</div>
+        <div style="display:flex;gap:14px"><div class="fake-sel">2026年</div><div class="fake-sel">07月 <span>⌄</span></div></div>
+        <button class="dl-btn">⬇ 导出历史电价数据</button>
+        <div class="note">ⓘ 相同数据重复下载不计入下载次数。</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="report">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+      <button class="back-btn">← 返回</button>
+      <div><h2 style="font-size:24px;font-weight:800">上海 · 2026年7月 智能分析报告</h2><div style="font-size:13px;color:var(--sub);margin-top:4px">🤖 GEMINI 3 生成 · 2026-07-12 11:46 · 大工业用电 / 两部制 / 35千伏</div></div>
+    </div>
+    <div class="kpis">
+      <div class="card kpi"><div class="ico" style="background:#eef1ff">💰</div><div><div class="lb">全月加权均价</div><div class="vl">0.7876<span>元/kWh</span></div></div></div>
+      <div class="card kpi"><div class="ico" style="background:#fff6e5">⚡</div><div><div class="lb">最大峰谷价差</div><div class="vl">1.1191<span>元/kWh</span></div></div></div>
+      <div class="card kpi"><div class="ico" style="background:#e9fbf0">📈</div><div><div class="lb">峰值月度变动</div><div class="vl" style="color:var(--orange)">+14.9<span>%</span></div></div></div>
+    </div>
+    <div class="split">
+      <div class="stack">
+        <div class="card rep-sec">
+          <h3>💡 核心洞察</h3>
+          <div class="insight">本月上海地区大工业电价<b>峰谷价差高达 1.1191 元/kWh</b>，处于近六个月高位，储能套利空间充足。尖峰时段（11:00–14:00）电价达 <b>1.4404 元/kWh</b>，深谷时段（22:00–06:00）低至 <b>0.3213 元/kWh</b>。</div>
+          <div class="insight">从趋势看，7月高峰电价环比上升 <b>14.9%</b>，为全年峰值月份；而 2–6 月为深谷优化窗口，均价相对平稳，适合安排检修与负荷转移。</div>
+        </div>
+        <div class="card rep-sec">
+          <h3>📊 当日分时电价</h3>
+          <div class="legend" id="repLegend"></div>
+          <div id="reportChart"></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card rep-sec">
+          <h3>🎯 优化策略建议</h3>
+          <div class="strategy"><div class="num">1</div><div class="txt"><b>满额充放电</b>深谷时段（22:00–06:00）满额充电，尖峰时段（11:00–14:00）放电，单次循环价差收益约 <b>1.12 元/kWh</b>。</div></div>
+          <div class="strategy"><div class="num">2</div><div class="txt"><b>负荷转移</b>将可调节生产负荷从高峰调至平时/低谷时段，预计可降低用电成本 <b>18%–25%</b>。</div></div>
+          <div class="strategy"><div class="num">3</div><div class="txt"><b>需量管理</b>两部制下优化最大需量申报，避免尖峰时段负荷叠加，减少基本电费支出。</div></div>
+        </div>
+        <div class="card rep-sec">
+          <h3>⚠️ 风险提示</h3>
+          <div class="disclaimer">本报告基于国家电网、地方发改委公开数据由AI生成，仅供决策参考，不构成投资建议。实际电价以当地电网公司最终结算为准，套利收益需扣除储能损耗、设备折旧等成本。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+setInterval(()=>{const d=new Date();document.getElementById('clk').textContent=d.toTimeString().slice(0,8)},1000);
+const icons={work:'🏠',query:'📊',cal:'📅',trend:'📈',policy:'📄',download:'📥'};
+const titles={work:'工作台',query:'电价查询',cal:'电价日历',trend:'趋势分析',policy:'政策查询',download:'数据下载'};
+document.querySelectorAll('.mainnav a').forEach(a=>{a.onclick=()=>{document.querySelector('.mainnav a.active')?.classList.remove('active');a.classList.add('active');const p=a.dataset.p;document.querySelectorAll('.page').forEach(s=>s.classList.remove('on'));document.getElementById(p).classList.add('on');document.getElementById('topIcon').textContent=icons[p];document.getElementById('topTitle').textContent=titles[p];window.scrollTo(0,0);};});
+const tiers={deep:{c:'#22c55e',v:0.321334},valley:{c:'#3b82f6',v:0.684270},peak:{c:'#f59e0b',v:1.168185},top:{c:'#ef4444',v:1.440388}};
+const hourly=['deep','deep','deep','deep','deep','deep','valley','valley','peak','peak','peak','top','top','top','peak','peak','peak','valley','valley','peak','peak','peak','deep','deep'];
+const avg=0.78760617,spread=1.119054;
+function buildLegend(el,ws){const items=[['#ef4444','尖峰'],['#f59e0b','高峰'],['#3b82f6','平时'],['#22c55e','低谷'],['#10b981','深谷']];if(ws)items.push(['#eab308','峰谷价差']);el.innerHTML=items.map(i=>`<span><i style="border-color:${i[0]}"></i>${i[1]}</span>`).join('');}
+buildLegend(document.getElementById('legend'),false);
+function priceChart(){const W=900,H=380,pad=50,maxV=1.8;const bw=(W-pad-20)/24;let bars='',line='',labels='',hits='';hourly.forEach((t,i)=>{const v=tiers[t].v,c=tiers[t].c;const x=pad+i*bw,h=(v/maxV)*(H-70),y=H-40-h;bars+=`<rect x="${x}" y="${y}" width="${bw-2}" height="${h}" fill="${c}" opacity=".25" rx="2"/>`;line+=`${x+bw/2},${y} `;hits+=`<rect class="bar-hit" x="${x}" y="30" width="${bw}" height="${H-70}" fill="transparent" data-i="${i}"/>`;});const np=[[3,'0.321334'],[6.5,'0.684270'],[9.5,'1.168185'],[12,'1.440388'],[16,'1.168185'],[20,'1.168185'],[23,'0.321334']];np.forEach(p=>{const t=hourly[Math.round(p[0])],v=tiers[t].v,x=pad+p[0]*bw,y=H-40-(v/maxV)*(H-70);labels+=`<text x="${x}" y="${y-8}" font-size="12" fill="#666" text-anchor="middle">${p[1]}</text>`;});const sY=H-40-(spread/maxV)*(H-70),aY=H-40-(avg/maxV)*(H-70);let ya='';[0.4,0.8,1.2,1.6,1.8].forEach(v=>{const y=H-40-(v/maxV)*(H-70);ya+=`<line x1="${pad}" y1="${y}" x2="${W-20}" y2="${y}" stroke="#eef1f7"/><text x="${pad-10}" y="${y+4}" font-size="11" fill="#a9b0c0" text-anchor="end">${v}</text>`;});return `<svg viewBox="0 0 ${W} ${H}" width="100%"><text x="20" y="25" font-size="12" fill="#8a93a8">元/千瓦时</text>${ya}${bars}<polyline points="${line}" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity=".4"/><line x1="${pad}" y1="${sY}" x2="${W-25}" y2="${sY}" stroke="#eab308" stroke-dasharray="6 5" stroke-width="1.5"/><text x="${pad+8}" y="${sY-8}" font-size="12" fill="#a06a00">峰谷差价 ${spread}</text><line x1="${pad}" y1="${aY}" x2="${W-25}" y2="${aY}" stroke="#3b82f6" stroke-dasharray="6 5" stroke-width="1.5"/><circle cx="${pad}" cy="${aY}" r="4" fill="#3b82f6"/><text x="${pad+8}" y="${aY-8}" font-size="12" fill="#3b82f6">加权均价 ${avg}</text>${labels}<g font-size="11" fill="#a9b0c0"><text x="${pad}" y="${H-15}">00:00</text><text x="${pad+8*bw}" y="${H-15}">08:00</text><text x="${pad+16*bw}" y="${H-15}">16:00</text><text x="${W-60}" y="${H-15}">24:00</text></g>${hits}</svg>`;}
+document.getElementById('chart1').innerHTML=priceChart();
+document.querySelector('#query .chart-clone').innerHTML=priceChart();
+buildLegend(document.querySelector('#query .clone-legend'),false);
+const regions=['安徽','北京','重庆','福建','广东惠州市','广东江门市','广东东西两翼地区','广东粤北山区','广东珠三角五市','甘肃','广西','贵州','湖北','冀北地区','河北南部','黑龙江','湖南','河南','海南','吉林','江苏','江西','辽宁','蒙东地区','蒙西地区','宁夏','青海','四川','山东','上海','陕西(不含榆林)','陕西榆林','深汕特别合作区','山西','天津','新疆','云南','浙江'];
+function regionChips(a='上海'){return regions.map(r=>`<span class="chip ${r===a?'on':''}">${r}</span>`).join('');}
+function makeFilters(o){return `<div class="frow"><div class="lab">📍 行政区域</div><div class="region-area"><div class="region-chips">${regionChips()}</div><div class="region-toggle">展开 <span class="arr">⌄</span></div></div></div>${o.date?`<div class="frow"><div class="lab">📅 ${o.dateLabel}</div><div class="date-in">📅 ${o.dateVal}</div><span class="hint">${o.hint}</span></div>`:''}<div class="frow"><div class="lab">⚡ 用电分类</div><div class="chips"><span class="chip">一般工商业用电</span><span class="chip on">大工业用电</span></div></div><div class="frow"><div class="lab">📚 计价方式</div><div class="chips"><span class="chip dis">单一制</span><span class="chip on">两部制</span></div></div>${o.year?`<div class="frow"><div class="lab">📅 选择年份</div><div class="chips"><span class="chip on">最近六个月</span><span class="chip">2026年</span><span class="chip">2025年</span><span class="chip">2024年</span><span class="chip">2023年</span></div></div>`:''}<div class="frow"><div class="lab">〰 电压等级</div><div class="chips"><span class="chip">不满1千伏</span><span class="chip">10千伏</span><span class="chip on">35千伏</span><span class="chip">110千伏</span><span class="chip">220千伏及以上</span></div></div>`;}
+document.getElementById('filtersQuery').innerHTML=makeFilters({date:true,dateLabel:'查询日期',dateVal:'2026年07月11日',hint:'选择需要查询的具体日期电价数据 (2023-06-01 至 2026-07-31)'});
+document.getElementById('filtersCal').innerHTML=makeFilters({date:true,dateLabel:'查询月份',dateVal:'2026年07月',hint:'选择需要查询的月份以同步月度电价概览 (2023年6月 - 2026年7月)'});
+document.getElementById('filtersTrend').innerHTML=makeFilters({date:false,year:true});
+// 行政区域展开/收起
+document.querySelectorAll('.region-toggle').forEach(tg=>{tg.onclick=()=>{const area=tg.closest('.region-area');area.classList.toggle('expanded');tg.childNodes[0].nodeValue=area.classList.contains('expanded')?'收起 ':'展开 ';};});
+function buildCal(){let html='<div></div><div></div>';for(let d=1;d<=31;d++){const dow=(d+2)%7;const we=(dow===5||dow===6)?'we':'';const on=d===12?'on':'';html+=`<div class="day ${we} ${on}"><div class="dn">${String(d).padStart(2,'0')}</div><div class="avg"><span>均价</span><b>0.7876</b></div><div class="diff-box"><div class="diff"><span>价差</span><span>1.1191 ↗</span></div></div><div class="bar"></div></div>`;}document.getElementById('calGrid').innerHTML=html;}
+buildCal();
+buildLegend(document.getElementById('trendLegend'),true);
+function trendChart(){const W=900,H=420,pad=55,maxV=1.8;const months=['2月','3月','4月','5月','6月','7月'];const peak=[1.02,1.02,1.0,1.02,1.02,1.17];const diff=[0.78,0.89,0.7,0.75,0.72,1.1];const sx=i=>pad+i*((W-pad-40)/(months.length-1));const sy=v=>H-50-(v/maxV)*(H-90);const seg=(W-pad-40)/(months.length-1);window.trendData=months.map((m,i)=>({m,peak:peak[i].toFixed(4),diff:diff[i].toFixed(4)}));let ya='';[0.9,1.2,1.5,1.8].forEach(v=>{const y=sy(v);ya+=`<line x1="${pad}" y1="${y}" x2="${W-20}" y2="${y}" stroke="#eef1f7"/><text x="${pad-10}" y="${y+4}" font-size="11" fill="#a9b0c0" text-anchor="end">${v}</text>`;});const pl=peak.map((v,i)=>`${sx(i)},${sy(v)}`).join(' ');const dl=diff.map((v,i)=>`${sx(i)},${sy(v)}`).join(' ');const da=`${pad},${H-50} `+dl+` ${sx(5)},${H-50}`;const pd=peak.map((v,i)=>`<circle cx="${sx(i)}" cy="${sy(v)}" r="4" fill="#fff" stroke="#f59e0b" stroke-width="2"/>`).join('');const dd=diff.map((v,i)=>`<rect x="${sx(i)-3}" y="${sy(v)-3}" width="6" height="6" fill="#eab308" transform="rotate(45 ${sx(i)} ${sy(v)})"/>`).join('');const xl=months.map((m,i)=>`<text x="${sx(i)}" y="${H-20}" font-size="12" fill="#8a93a8" text-anchor="middle">${m}</text>`).join('');let hits='';months.forEach((m,i)=>{hits+=`<rect class="line-hit" x="${sx(i)-seg/2}" y="20" width="${seg}" height="${H-60}" fill="transparent" data-i="${i}"/>`;});return `<svg viewBox="0 0 ${W} ${H}" width="100%"><text x="20" y="25" font-size="12" fill="#8a93a8">元/千瓦时</text>${ya}<polygon points="${da}" fill="#eab308" opacity=".12"/><polyline points="${dl}" fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="6 4"/><polyline points="${pl}" fill="none" stroke="#f59e0b" stroke-width="2.5"/><circle cx="${sx(5)}" cy="${sy(1.44)}" r="5" fill="#fff" stroke="#ef4444" stroke-width="2"/>${pd}${dd}${xl}${hits}</svg>`;}
+document.getElementById('trendChart').innerHTML=trendChart();
+const policies=[{t:'国网吉林省电力有限公司2026年7月代理购电工商...',hl:false,r:'吉林 国家电网',d:'（执行时间：2026年7月1日2026年7月31日）用电分类 电压等级 电度用电价格 (元/千瓦时) 代理购电价格 上网环节线损电价 系统...'},{t:'云南电网有限责任公司2026年7月代理购电工商...',hl:true,r:'云南 中国南方电网',d:'（执行时间：2026年7月1日2026年7月31日）代理购电工商业用户电价表 用电分类 电压等级 代购电用户电价 代理购电用户电价 ...'},{t:'贵州电网有限责任公司2026年7月代理购电用户...',hl:false,r:'贵州 中国南方电网',d:'（执行时间：2026年7月1日2026年7月31日）代理购电用户电价表 用电分类 电压等级 电度电价 ...'},{t:'国网冀北电力有限公司关于2026年7月代理购电价格...',hl:false,r:'冀北地区 国家电网',d:'（执行时间：2026年7月1日2026年7月31日）代理购电价格 用电分类 电压等级 电度电价 ...'}];
+function renderPolicies(list){document.getElementById('polGrid').innerHTML=list.length?list.map(p=>`<div class="pol ${p.hl?'hl':''}"><div class="top-p"><div class="fico">📄</div><div><h4>${p.t}</h4><span class="st">现行有效</span></div></div><div class="region">${p.r}</div><div class="desc">${p.d}</div><div class="foot"><span>📅 2026-07-01</span><span class="read">阅读详情 ›</span></div></div>`).join(''):'<div class="empty">未找到相关政策，换个关键词试试</div>';}
+renderPolicies(policies);
+function toast(msg){let t=document.querySelector('.toast');if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+const tip=document.createElement('div');tip.className='chart-tip';document.body.appendChild(tip);
+const tierName={deep:'深谷',valley:'平时',peak:'高峰',top:'尖峰'};
+function pos(e){tip.style.left=Math.min(e.clientX+14,innerWidth-200)+'px';tip.style.top=(e.clientY-20)+'px';tip.style.opacity=1;}
+function bindBarTip(box){if(!box)return;box.querySelectorAll('.bar-hit').forEach(r=>{r.onmousemove=e=>{const i=+r.dataset.i,t=hourly[i];tip.innerHTML=`<div class="tt-time">${String(i).padStart(2,'0')}:00 - ${String((i+1)%24).padStart(2,'0')}:00</div><div class="tt-row"><span class="tt-dot" style="background:${tiers[t].c}"></span>${tierName[t]}<b style="margin-left:8px">${tiers[t].v.toFixed(6)} 元</b></div>`;pos(e);};r.onmouseleave=()=>tip.style.opacity=0;});}
+bindBarTip(document.getElementById('chart1'));bindBarTip(document.querySelector('#query .chart-clone'));
+function bindLineTip(box){if(!box||!window.trendData)return;box.querySelectorAll('.line-hit').forEach(r=>{r.onmousemove=e=>{const d=window.trendData[+r.dataset.i];tip.innerHTML=`<div class="tt-time">${d.m}</div><div class="tt-row"><span class="tt-dot" style="background:#f59e0b"></span>高峰<b style="margin-left:8px">${d.peak} 元</b></div><div class="tt-row" style="margin-top:4px"><span class="tt-dot" style="background:#eab308"></span>峰谷价差<b style="margin-left:8px">${d.diff} 元</b></div>`;pos(e);};r.onmouseleave=()=>tip.style.opacity=0;});}
+bindLineTip(document.getElementById('trendChart'));
+function closePops(){document.querySelectorAll('.dd-panel,.dp').forEach(p=>p.remove());}
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('chip')&&!e.target.classList.contains('dis')){const row=e.target.closest('.chips')||e.target.closest('.region-chips');row.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));e.target.classList.add('on');}
+  if(e.target.closest('.day')){document.querySelectorAll('.day.on').forEach(d=>d.classList.remove('on'));e.target.closest('.day').classList.add('on');}
+  if(e.target.closest('.cat-item')){document.querySelectorAll('.cat-item.on').forEach(c=>c.classList.remove('on'));e.target.closest('.cat-item').classList.add('on');}
+  if(e.target.classList.contains('read'))toast('打开政策详情…');
+  if(e.target.classList.contains('more'))toast('跳转更多查询…');
+  if(!e.target.closest('.dd-panel')&&!e.target.closest('.fake-sel')&&!e.target.closest('.dp')&&!e.target.closest('.date-in'))closePops();
+});
+document.querySelectorAll('.fake-sel').forEach(sel=>{sel.addEventListener('click',ev=>{ev.stopPropagation();closePops();const txt=sel.textContent;let opts;if(txt.includes('年'))opts=['2023年度','2024年度','2025年度','2026年度'];else if(txt.includes('月'))opts=Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0')+'月');else opts=regions;const panel=document.createElement('div');panel.className='dd-panel';panel.innerHTML=opts.map(o=>`<div class="opt">${o}</div>`).join('');sel.appendChild(panel);panel.style.top='100%';panel.style.left='0';panel.querySelectorAll('.opt').forEach(o=>o.onclick=e2=>{e2.stopPropagation();sel.childNodes[0].nodeValue=o.textContent+' ';closePops();toast('已选择：'+o.textContent);});});});
+document.querySelectorAll('.date-in').forEach(di=>{di.addEventListener('click',ev=>{ev.stopPropagation();closePops();const dp=document.createElement('div');dp.className='dp';let cells='';['一','二','三','四','五','六','日'].forEach(w=>cells+=`<div class="wd">${w}</div>`);cells+='<div></div><div></div>';for(let d=1;d<=31;d++)cells+=`<div class="d ${d===11?'on':''}" data-d="${d}">${d}</div>`;dp.innerHTML=`<div class="dp-head"><span>‹</span><b>2026年 7月</b><span>›</span></div><div class="dp-grid">${cells}</div>`;di.appendChild(dp);dp.style.top='110%';dp.style.left='0';dp.querySelectorAll('.d').forEach(c=>c.onclick=e2=>{e2.stopPropagation();di.childNodes[0].nodeValue='📅 2026年07月'+String(c.dataset.d).padStart(2,'0')+'日 ';closePops();});});});
+document.querySelectorAll('#work .kpi .vl').forEach(el=>{const span=el.querySelector('span'),unit=span?span.outerHTML:'';const target=parseFloat(el.textContent);const dec=(el.textContent.match(/\.(\d+)/)||['',''])[1].length;let cur=0;const step=target/40;const timer=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(timer);}el.innerHTML=cur.toFixed(dec)+unit;},20);});
+const si=document.querySelector('#policy input');if(si)si.addEventListener('input',e=>{const k=e.target.value.trim();renderPolicies(policies.filter(p=>p.t.includes(k)||p.r.includes(k)||p.d.includes(k)));});
+document.querySelectorAll('#policy .hot .h').forEach(h=>h.onclick=()=>{si.value=h.textContent;si.dispatchEvent(new Event('input'));});
+document.querySelectorAll('.dl-btn').forEach(b=>b.onclick=()=>toast('演示环境 · 已触发下载/导出'));
+const sb=document.querySelector('.sbtn');if(sb)sb.onclick=()=>toast('正在检索政策库…');
+function goReport(){document.querySelectorAll('.page').forEach(s=>s.classList.remove('on'));document.getElementById('report').classList.add('on');document.getElementById('topIcon').textContent='🤖';document.getElementById('topTitle').textContent='智能分析报告';const act=document.querySelector('.mainnav a.active');if(act)act.classList.remove('active');window.scrollTo(0,0);const rc=document.getElementById('reportChart');if(rc&&!rc.innerHTML){rc.innerHTML=priceChart();buildLegend(document.getElementById('repLegend'),false);bindBarTip(rc);}}
+document.querySelectorAll('.ai-btn').forEach(b=>b.onclick=goReport);
+const backBtn=document.querySelector('.back-btn');if(backBtn)backBtn.onclick=()=>{document.querySelectorAll('.page').forEach(s=>s.classList.remove('on'));document.getElementById('work').classList.add('on');document.getElementById('topIcon').textContent='🏠';document.getElementById('topTitle').textContent='工作台';document.querySelector('.mainnav a[data-p="work"]').classList.add('active');window.scrollTo(0,0);};
+</script>
+</body>
+</html>
